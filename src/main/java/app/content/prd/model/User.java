@@ -1,53 +1,76 @@
 package app.content.prd.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+
+import java.util.Collection;
 
 @Entity
 @Table(name =  "user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class User {
 
-    @Getter
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long id;
 
-    @Getter
     @Column(name = "name")
-    private String name;
+    private String firstName;
 
-    @Getter
+
     private String email;
 
-    @Getter
-    private String pass;
+    private String password;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(
+                    name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(
+                    name = "role_id", referencedColumnName = "id"))
+
+    private Collection<Role> roles;
 
     public User() {
 
     }
 
-    public User(String name, String email, String pass) {
+    public User(String firstName, String email, String password, Collection<Role> roles) {
         super();
-        this.name = name;
+        this.firstName = firstName;
+
         this.email = email;
-        this.pass = pass;
-
+        this.password = password;
+        this.roles = roles;
     }
-
+    public Long getId() {
+        return id;
+    }
     public void setId(Long id) {
         this.id = id;
     }
-
-    public void setName(String name) {
-        this.name = name;
+    public String getFirstName() {
+        return firstName;
     }
-
-
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+    public String getEmail() {
+        return email;
+    }
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public void setPass(String pass) {
-        this.pass = pass;
+    public String getPassword() {
+        return password;
     }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public Collection<Role> getRoles() {
+        return roles;
+    }
+    public void setRoles(Collection<Role> roles) {
+        this.roles = roles;
+    }
+
 }
